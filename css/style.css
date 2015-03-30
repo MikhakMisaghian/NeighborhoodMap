@@ -20,7 +20,8 @@ html, body {
 	height: 100%;
 }
 
-/*.search-form {
-	float: right;
-	position: relative;
-}*/
+.search-form {
+	top: 55px;
+	right: 10px;
+}
+}

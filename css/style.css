@@ -15,3 +15,7 @@ html, body {
 	margin: 0;
 	right: 0;
 }
+
+.map-col {
+	height: 100%;
+}

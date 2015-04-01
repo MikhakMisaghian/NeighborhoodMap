@@ -53,8 +53,8 @@ function fetchForsquare(allLocations, map, markers) {
         allLocations.push(item);
         locationDataArr.push({lat: item.location.lat, lng: item.location.lng, name: item.name, loc: item.location.address + " " + item.location.city + ", " + item.location.state + " " + item.location.postalCode});
       });
+      placeMarkers(locationDataArr, map, markers);
     });
-    placeMarkers(locationDataArr, map, markers);
 }
 
 // placin gmarker for the result locations on the map

@@ -16,7 +16,7 @@ function AppViewModel() {
     return;
   }  
   self.map = ko.observable(map);
-  fetchForsquare(self.allLocations, map, markers);
+  fetchForsquare(map, markers);
 
 }
 
@@ -37,7 +37,7 @@ function initializeMap() {
 
 // get location data from foursquare
 // Foursquare
-function fetchForsquare(allLocations, map, markers) {
+function fetchForsquare(map, markers) {
   var foursquareUrl = 'https://api.foursquare.com/v2/venues/search' +
     '?client_id=MSJE5EGJPP5MD0PRPRERMCU1V4E4MKQRSSH4KCCBUDIF5W5F' +
     '&client_secret=UJ2DOWO3TDSWOXFEWBGDZY5QOQ4KGWZ3HXVIA54FOB55O1YO' +
@@ -50,7 +50,7 @@ function fetchForsquare(allLocations, map, markers) {
 
     $.getJSON(foursquareUrl, function(data) {
       data.response.venues.forEach(function(item) {
-        allLocations.push(item);
+        // allLocations.push(item);
         locationDataArr.push({lat: item.location.lat, lng: item.location.lng, name: item.name, loc: item.location.address + " " + item.location.city + ", " + item.location.state + " " + item.location.postalCode});
       });
     });

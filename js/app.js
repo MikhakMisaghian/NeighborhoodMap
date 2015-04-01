@@ -1,5 +1,5 @@
 // Google maps initial cordinates for San Francisco, CA
-var initialCoordinate = {lat: 37.7577, lng: -122.4376};
+var initialCoordinate = {lat: 37.7577, lng: -122.4376, searchQuery: 'landmarks'};
 
 function initialize() {
     var mapOptions = {
@@ -12,3 +12,4 @@ function initialize() {
 
 // google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initialize);
+

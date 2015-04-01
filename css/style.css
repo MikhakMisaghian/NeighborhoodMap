@@ -23,5 +23,6 @@ html, body {
 .search-form {
 	top: 55px;
 	right: 10px;
-}
+	max-width: 200px;
+	float: right;
 }

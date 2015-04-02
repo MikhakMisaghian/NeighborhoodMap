@@ -48,24 +48,38 @@ function fetchForsquare(allLocations, map, markers) {
 
     var locationDataArr = [];
 
-    $.getJSON(foursquareUrl, function(data) {
+    $.getJSON(foursquareUrl, function(data) {      
       data.response.venues.forEach(function(item) {
-        allLocations.push(item);
+        allLocations.push(item);              
         locationDataArr.push({lat: item.location.lat, lng: item.location.lng, name: item.name, loc: item.location.address + " " + item.location.city + ", " + item.location.state + " " + item.location.postalCode});
       });
       placeMarkers(locationDataArr, map, markers);
     });
 }
 
-// placin gmarker for the result locations on the map
+// place marker for the result locations on the map
 function placeMarkers(locationDataArr, map, markers) {
   locationDataArr.forEach(function(data) {
     var latlng = new google.maps.LatLng(data.lat, data.lng);
     var marker = new google.maps.Marker({
       position: latlng,
       map: map,
-      animation: google.maps.Animation.DROP
+      animation: google.maps.Animation.DROP,
+      content: data.name + "<br>" + data.loc
     });
-    // markers.push(marker);
+    markers.push(marker);
+
+    // create infoWindow for each marker on the map
+    var infoWindow = new google.maps.InfoWindow({
+      content: marker.content
+    });
+
+    // show details about location when user clicks on a marker
+    google.maps.event.addListener(marker, 'click', function() {
+      infoWindow.open(map, marker);
+    });
+
   });
 }
+
+

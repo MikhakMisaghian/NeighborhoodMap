@@ -17,7 +17,7 @@ function AppViewModel() {
   }  
   self.map = ko.observable(map);
   fetchForsquare(self.allLocations, self.map(), markers);
-
+console.log(self.allLocations());
 }
 
 // Activate knockout.js

@@ -26,3 +26,35 @@ html, body {
 	max-width: 200px;
 	float: right;
 }
+
+.list-view {
+	display: block;
+	position: absolute;
+	top: 100%;
+	/*left: 0;*/
+	z-index: 1000;
+	/*display: none;*/
+	float: right;
+	right: 1px;
+	min-width: 171px;
+	/*width: 100%;*/
+	padding: 5px 5px 0 5px;
+	margin: 2px 0 0;
+	font-size: 14px;
+	text-align: left;
+	list-style: none;
+	background-color: #fff;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0,0,0,.15);
+	border-radius: 4px;
+	-webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+	box-shadow: 0 6px 12px rgba(0,0,0,.175);	
+}
+li {
+	display: list-item;
+}
+li:hover {
+	background-color: #ddd;
+}

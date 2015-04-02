@@ -79,7 +79,21 @@ function placeMarkers(locationDataArr, map, markers) {
       infoWindow.open(map, marker);
     });
 
+    // toggle bounce when user clicks on a location marker on google map
+    google.maps.event.addListener(marker, 'click', function() {
+      toggleBounce(marker);
+    });
   });
 }
 
+function toggleBounce(marker) {
+  if (marker.setAnimation() != null) {
+    marker.setAnimation(null);
+  } else {
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function() {
+      marker.setAnimation(null);
+    }, 600);
+  }
+}
 

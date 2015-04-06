@@ -32,7 +32,7 @@
                 <div class="col-md-2 search-form">
                     <!-- <span>Sushi places in SF</span> -->
                     <ul class="list-view" data-bind="foreach: allLocations" id="location-list">
-                        <li data-bind="text: name"></li>
+                        <li data-bind="text: name, click: $root.clickHandler"></li>
                     </ul>
                 </div>
             </div>

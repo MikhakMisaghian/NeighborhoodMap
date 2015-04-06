@@ -77,7 +77,9 @@ function AppViewModel() {
   }  
   self.map = ko.observable(map);
   fetchForsquare(self.allLocations, self.map(), markers);
-console.log(self.allLocations());
+  self.clickHandler = function(data) {
+    centerLocation(data, self.map(), markers);
+  }
 }
 
 // Activate knockout.js
@@ -132,7 +134,6 @@ function fetchForsquare(allLocations, map, markers) {
       content: data.name + "<br>" + data.loc
     });
     markers.push(marker);
-
     // create infoWindow for each marker on the map
     var infoWindow = new google.maps.InfoWindow({
       content: marker.content
@@ -160,3 +161,14 @@ function toggleBounce(marker) {
   }
 }
 
+// clickHandler on location list view
+function centerLocation(data, map, markers) {
+  map.setCenter(new google.maps.LatLng(data.location.lat, data.location.lng));
+  map.setZoom(12);
+  for (var i = 0; i < markers.length; i++) {  
+    var content = markers[i].content.split('<br>');
+    if (data.name === content[0]) {     
+      toggleBounce(markers[i]);
+    }
+  }
+}

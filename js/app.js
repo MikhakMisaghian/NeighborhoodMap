@@ -1,5 +1,65 @@
 // Google maps initial cordinates for San Francisco, CA
 var initialCoordinate = {lat: 37.7577, lng: -122.4376, searchQuery: 'sushi'};
+
+
+// List of my favorite places in San Francisco
+var Model = [
+    {
+      "name": "Fort Point",
+      "latlng": [37.810537, -122.477063]
+    },
+    {
+      "name": "Coit Tower",
+      "latlng": [37.802395, -122.405822]
+    },
+    {
+      "name": "Twin Peaks",
+      "latlng": [37.754407, -122.447684]
+    },
+    /*{
+      "name": "Lombard Street",
+      "latlng": [37.802139, -122.41874]
+    },
+    {
+      "name": "Fisherman's Wharf",
+      "latlng": [37.8079282,-122.4178654]
+    },*/
+    {
+      "name": "Cliff House",
+      "latlng": [37.778485,-122.513963]
+    },  
+    {
+      "name": "Benkyodo Co",
+      "latlng": [37.7856596,-122.4281896]
+    },
+    {
+      "name": "Golden Gat Bakery",
+      "latlng": [37.796401,-122.406887]
+    },
+    {
+      "name": "Lands End",
+      "latlng": [37.785443,-122.50618]
+    },
+    {
+      "name": "Gialina Pizzeria",
+      "latlng": [37.734016,-122.434249]
+    },
+    {
+      "name": "Pier 39",
+      "latlng": [37.808673,-122.409821]
+    },
+    {
+      "name": "Lavash",
+      "latlng": [37.764041,-122.463355]
+    },
+    {
+      "name": "Ghiradeli Square",
+      "latlng": [37.80583,-122.423012]
+    }
+]
+
+
+
 /*
 ========== ViewModel ===========
 */
@@ -38,28 +98,32 @@ function initializeMap() {
 // get location data from foursquare
 // Foursquare
 function fetchForsquare(allLocations, map, markers) {
-  var foursquareUrl = 'https://api.foursquare.com/v2/venues/search' +
-    '?client_id=MSJE5EGJPP5MD0PRPRERMCU1V4E4MKQRSSH4KCCBUDIF5W5F' +
-    '&client_secret=UJ2DOWO3TDSWOXFEWBGDZY5QOQ4KGWZ3HXVIA54FOB55O1YO' +
-    '&v=20130815' +
-    '&m=foursquare' +
-    '&ll=' + initialCoordinate.lat + ',' + initialCoordinate.lng +
-    '&query=' + initialCoordinate.searchQuery;
+  var locationDataArr = [];
+  var foursquareUrl = "";
+  var location = [];
+  for (place in Model) {
+    foursquareUrl = 'https://api.foursquare.com/v2/venues/search' +
+      '?client_id=MSJE5EGJPP5MD0PRPRERMCU1V4E4MKQRSSH4KCCBUDIF5W5F' +
+      '&client_secret=UJ2DOWO3TDSWOXFEWBGDZY5QOQ4KGWZ3HXVIA54FOB55O1YO' +
+      '&v=20130815' +
+      '&m=foursquare' +
+      '&ll=' + Model[place]["latlng"][0] + ',' + Model[place]["latlng"][1] + 
+      '&query=' + Model[place]["name"] + 
+      '&intent=match';
 
-    var locationDataArr = [];
-
-    $.getJSON(foursquareUrl, function(data) {      
+    $.getJSON(foursquareUrl, function(data) {         
       data.response.venues.forEach(function(item) {
-        allLocations.push(item);              
-        locationDataArr.push({lat: item.location.lat, lng: item.location.lng, name: item.name, loc: item.location.address + " " + item.location.city + ", " + item.location.state + " " + item.location.postalCode});
+        allLocations.push(item);
+        location = {lat: item.location.lat, lng: item.location.lng, name: item.name, loc: item.location.address + " " + item.location.city + ", " + item.location.state + " " + item.location.postalCode};
+        locationDataArr.push(location);
       });
-      placeMarkers(locationDataArr, map, markers);
-    });
+      placeMarkers(location, map, markers);
+    });    
+  }
 }
 
 // place marker for the result locations on the map
-function placeMarkers(locationDataArr, map, markers) {
-  locationDataArr.forEach(function(data) {
+  function placeMarkers(data, map, markers) {
     var latlng = new google.maps.LatLng(data.lat, data.lng);
     var marker = new google.maps.Marker({
       position: latlng,
@@ -83,7 +147,6 @@ function placeMarkers(locationDataArr, map, markers) {
     google.maps.event.addListener(marker, 'click', function() {
       toggleBounce(marker);
     });
-  });
 }
 
 function toggleBounce(marker) {

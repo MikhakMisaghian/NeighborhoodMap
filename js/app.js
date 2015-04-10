@@ -1,5 +1,5 @@
 // Google maps initial cordinates for San Francisco, CA
-var initialCoordinate = {lat: 37.7577, lng: -122.4376, searchQuery: 'sushi'};
+var initialCoordinate = {lat: 37.7577, lng: -122.4376};
 
 
 // List of my favorite places in San Francisco
@@ -61,13 +61,18 @@ var Model = [
 
 
 /*
-========== ViewModel ===========
+======================= ViewModel ========================
 */
 // ViewModel that defines the data and behavior
-function AppViewModel() {
+var AppViewModel =  function() {
   var self = this;
-  var markers = [];
+  // var markers = [];
+  self.markers = ko.observableArray([]);
   self.allLocations = ko.observableArray([]);
+
+
+  self.filter =  ko.observable("");
+  self.search = ko.observable("");
 
   var map = initializeMap();
   // if google map is not responding, alert the user
@@ -76,15 +81,18 @@ function AppViewModel() {
     return;
   }  
   self.map = ko.observable(map);
-  fetchForsquare(self.allLocations, self.map(), markers);
+  fetchForsquare(self.allLocations, self.map(), self.markers);
+
+  self.filteredArray = ko.computed(function() {
+    return ko.utils.arrayFilter(self.allLocations(), function(item) { 
+      return item.name.toLowerCase().indexOf(self.filter().toLowerCase()) !== -1;
+    });
+  }, self);
+
   self.clickHandler = function(data) {
-    centerLocation(data, self.map(), markers);
+    centerLocation(data, self.map(), self.markers);
   }
-}
-
-// Activate knockout.js
-google.maps.event.addDomListener(window, 'load', ko.applyBindings(new AppViewModel()));
-
+};
 
 // initializing google map with predefined initial location
 function initializeMap() {
@@ -95,7 +103,10 @@ function initializeMap() {
     };
     return new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 }
-
+/*
+  END OF ViewModel
+  ============================================================
+*/
 
 // get location data from foursquare
 // Foursquare
@@ -150,7 +161,8 @@ function fetchForsquare(allLocations, map, markers) {
     });
 }
 
-function toggleBounce(marker) {
+// this function adds bounce to marker
+function toggleBounce(marker) {  
   if (marker.setAnimation() != null) {
     marker.setAnimation(null);
   } else {
@@ -162,13 +174,15 @@ function toggleBounce(marker) {
 }
 
 // clickHandler on location list view
-function centerLocation(data, map, markers) {
+function centerLocation(data, map, markers) {  
   map.setCenter(new google.maps.LatLng(data.location.lat, data.location.lng));
   map.setZoom(12);
-  for (var i = 0; i < markers.length; i++) {  
-    var content = markers[i].content.split('<br>');
+  for (var i = 0; i < markers().length; i++) {  
+    var content = markers()[i].content.split('<br>');
     if (data.name === content[0]) {     
-      toggleBounce(markers[i]);
+      toggleBounce(markers()[i]);
     }
   }
 }
+
+ko.applyBindings(new AppViewModel());

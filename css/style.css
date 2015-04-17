@@ -21,10 +21,10 @@ html, body {
 }
 
 .search-form {
-	top: 55px;
-	right: 10px;
+	top: 10px;
+	left: 50px;
 	max-width: 200px;
-	float: right;
+	float: left;
 }
 
 .list-view {
@@ -35,7 +35,6 @@ html, body {
 	float: right;
 	right: 1px;
 	min-width: 171px;
-	/*height: 250px;*/
 	overflow: auto;
 	padding: 5px 5px 0 5px;
 	margin: 2px 0 0;
@@ -51,9 +50,21 @@ html, body {
 	-webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
 	box-shadow: 0 6px 12px rgba(0,0,0,.175);	
 }
+
 li {
 	display: list-item;
 }
+
 li:hover {
 	background-color: #ddd;
+}
+
+li.active {
+	background-color: #ddd;
+}
+/* If it is a mobile device, it makes the list-view height smaller */
+@media only screen and (max-width: 500px) {
+	.list-view {
+		max-height: 100px;
+	}
 }

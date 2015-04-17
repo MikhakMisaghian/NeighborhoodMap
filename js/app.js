@@ -66,7 +66,6 @@ var Model = [
 // ViewModel that defines the data and behavior
 var AppViewModel =  function() {
   var self = this;
-  // var markers = [];
   self.markers = ko.observableArray([]);
   self.allLocations = ko.observableArray([]);
 
@@ -83,8 +82,16 @@ var AppViewModel =  function() {
   self.map = ko.observable(map);
   fetchForsquare(self.allLocations, self.map(), self.markers);
 
+  // filter the listview based on the search keywords
   self.filteredArray = ko.computed(function() {
-    return ko.utils.arrayFilter(self.allLocations(), function(item) { 
+    return ko.utils.arrayFilter(self.allLocations(), function(item) {
+      if (item.name.toLowerCase().indexOf(self.filter().toLowerCase()) !== -1) {
+        if(item.marker)
+          item.marker.setMap(map); 
+      } else {
+        if(item.marker)
+          item.marker.setMap(null);
+      }     
       return item.name.toLowerCase().indexOf(self.filter().toLowerCase()) !== -1;
     });
   }, self);
@@ -109,7 +116,6 @@ function initializeMap() {
 */
 
 // get location data from foursquare
-// Foursquare
 function fetchForsquare(allLocations, map, markers) {
   var locationDataArr = [];
   var foursquareUrl = "";
@@ -125,18 +131,19 @@ function fetchForsquare(allLocations, map, markers) {
       '&intent=match';
 
     $.getJSON(foursquareUrl, function(data) {         
-      data.response.venues.forEach(function(item) {
+      if(data.response.venues){
+        var item = data.response.venues[0];
         allLocations.push(item);
         location = {lat: item.location.lat, lng: item.location.lng, name: item.name, loc: item.location.address + " " + item.location.city + ", " + item.location.state + " " + item.location.postalCode};
         locationDataArr.push(location);
-      });
-      placeMarkers(location, map, markers);
+        placeMarkers(allLocations, place, location, map, markers);
+      }
     });    
   }
 }
 
 // place marker for the result locations on the map
-  function placeMarkers(data, map, markers) {
+  function placeMarkers(allLocations, place, data, map, markers) {
     var latlng = new google.maps.LatLng(data.lat, data.lng);
     var marker = new google.maps.Marker({
       position: latlng,
@@ -144,14 +151,21 @@ function fetchForsquare(allLocations, map, markers) {
       animation: google.maps.Animation.DROP,
       content: data.name + "<br>" + data.loc
     });
-    markers.push(marker);
+  
     // create infoWindow for each marker on the map
     var infoWindow = new google.maps.InfoWindow({
       content: marker.content
     });
+    marker.infowindow = infoWindow;
+    markers.push(marker);
+    allLocations()[allLocations().length - 1].marker = marker;
 
     // show details about location when user clicks on a marker
     google.maps.event.addListener(marker, 'click', function() {
+      // close infowindow that is open
+      for (var i = 0; i < markers().length; i++) {
+        markers()[i].infowindow.close(); 
+      }
       infoWindow.open(map, marker);
     });
 
@@ -174,7 +188,11 @@ function toggleBounce(marker) {
 }
 
 // clickHandler on location list view
-function centerLocation(data, map, markers) {  
+function centerLocation(data, map, markers) {
+  // close infowindow that is open  
+  for (var i = 0; i < markers().length; i++) {
+    markers()[i].infowindow.close(); 
+  }  
   map.setCenter(new google.maps.LatLng(data.location.lat, data.location.lng));
   map.setZoom(12);
   for (var i = 0; i < markers().length; i++) {  

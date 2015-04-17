@@ -1,7 +1,6 @@
 // Google maps initial cordinates for San Francisco, CA
 var initialCoordinate = {lat: 37.7577, lng: -122.4376};
 
-
 // List of my favorite places in San Francisco
 var Model = [
     {
@@ -16,14 +15,6 @@ var Model = [
       "name": "Twin Peaks",
       "latlng": [37.754407, -122.447684]
     },
-    /*{
-      "name": "Lombard Street",
-      "latlng": [37.802139, -122.41874]
-    },
-    {
-      "name": "Fisherman's Wharf",
-      "latlng": [37.8079282,-122.4178654]
-    },*/
     {
       "name": "Cliff House",
       "latlng": [37.778485,-122.513963]
@@ -57,8 +48,6 @@ var Model = [
       "latlng": [37.80583,-122.423012]
     }
 ]
-
-
 
 /*
 ======================= ViewModel ========================
@@ -137,6 +126,9 @@ function fetchForsquare(allLocations, map, markers) {
         location = {lat: item.location.lat, lng: item.location.lng, name: item.name, loc: item.location.address + " " + item.location.city + ", " + item.location.state + " " + item.location.postalCode};
         locationDataArr.push(location);
         placeMarkers(allLocations, place, location, map, markers);
+      } else {
+        alert("Sorry, Could not retreive data from foursquare. Please try again later!");
+        return;
       }
     });    
   }
